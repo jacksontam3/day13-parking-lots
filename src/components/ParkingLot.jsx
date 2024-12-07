@@ -1,11 +1,11 @@
 import React from 'react';
 import ParkingLotWorker from './ParkingLotWorker';
-import ParkingLotCase from './ParkingLotCase';
+import ParkingLotContainer from './ParkingLotContainer';
 const ParkingLot = () => {
     return (
         <div>
             <ParkingLotWorker />
-            <ParkingLotCase />
+            <ParkingLotContainer />
         </div>
     );
 };
