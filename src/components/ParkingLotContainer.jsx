@@ -1,15 +1,13 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { Card, Row, Col, Typography, Table } from 'antd';
 import Car from './Car';
+import { ParkingLotContext } from './ParkingLotContext';
+
 
 const { Title } = Typography;
 
 const ParkingLotContainer = () => {
-    const parkingLots = [
-        { name: 'The Plaza Park', capacity: 9, cars: ['ABC123', 'DEF456', null, null, null, null, null, null, null] },
-        { name: 'City Mall Garage', capacity: 12, cars: ['GHI789', 'JKL012', 'MNO345', null, null, null, null, null, null, null, null, null] },
-        { name: 'Office Tower Parking', capacity: 9, cars: [null, null, null, null, null, null, null, null, null] }
-    ];
+    const { parkingLots } = useContext(ParkingLotContext);
 
     const renderParkingGrid = (cars, capacity) => {
         const rows = Math.ceil(capacity / 3); // Number of rows
