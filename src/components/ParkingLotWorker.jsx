@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState , useContext} from 'react';
+import {ParkingLotContext} from './ParkingLotContext';
+import {fetchParkingLots, parkCar} from './api';
 import { Input, Select, Button, Space, message } from 'antd';
 
 const { Option } = Select;
@@ -6,16 +8,25 @@ const { Option } = Select;
 const ParkingLotWorker = () => {
     const [plateNumber, setPlateNumber] = useState('');
     const [parkingStrategy, setParkingStrategy] = useState('');
+    const {dispatch} = useContext(ParkingLotContext);
 
     const handlePark = () => {
         if (!plateNumber || !parkingStrategy) {
-            message.warning('Please fill in both Plate Number and Parking Strategy!');
+            alert('Plate Number and Parking Strategy are required.');
             return;
         }
-        console.log(`Plate Number: ${plateNumber}, Parking Strategy: ${parkingStrategy}`);
-        setPlateNumber('');
-        setParkingStrategy('');
-        message.success('Car parked successfully!');
+
+        parkCar(plateNumber, parkingStrategy).then(response => {
+            const {plateNumber, position, parkingLot} = response.data;
+            dispatch({type: 'PARK_CAR', payload: {plateNumber, position, parkingLot}});
+            setPlateNumber('');
+            setParkingStrategy('');
+        })
+            .catch(error => {
+                console.error('Failed to park car:', error);
+            }).finally(() => {
+            fetchParkingLots();
+        });
     };
 
     const handleFetch = () => {
@@ -36,7 +47,7 @@ const ParkingLotWorker = () => {
                     placeholder="Select Parking Strategy"
                     value={parkingStrategy}
                     onChange={(value) => setParkingStrategy(value)}
-                    style={{ width: 200 }}
+                    style={{width: 200}}
                 >
                     <Option value="Standard">Standard</Option>
                     <Option value="Smart">Smart</Option>
