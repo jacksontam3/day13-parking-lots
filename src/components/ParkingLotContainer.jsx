@@ -10,8 +10,8 @@ const ParkingLotContainer = () => {
     const { parkingLots } = useContext(ParkingLotContext);
 
     const renderParkingGrid = (cars, capacity) => {
-        const rows = Math.ceil(capacity / 3); // Number of rows
-        const cols = 3; // Fixed columns (3 per row)
+        const rows = Math.ceil(capacity / 3); 
+        const cols = 3;
         const grid = [];
 
         for (let i = 0; i < rows; i++) {
