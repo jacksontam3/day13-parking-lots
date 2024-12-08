@@ -3,7 +3,7 @@ import axios from 'axios';
 const strategyEnum = {
     Standard: 'STANDARD',
     Smart: 'SMART',
-    SuperSmart: 'SUPERSMART'
+    SuperSmart: 'SUPER_SMART'
 };
 
 const baseUrl = 'http://localhost:8080/parkinglot';
@@ -30,4 +30,12 @@ export const parkCar = (plateNumber, strategyType) => {
             console.error('Error from backend:', error.response ? error.response.data : error.message);
             throw error;
         });
+};
+
+export const fetchCar = (plateNumber) => {
+    return axios.post(`${baseUrl}/fetch`, { plateNumber }, {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
 };

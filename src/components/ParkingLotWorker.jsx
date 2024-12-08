@@ -1,11 +1,11 @@
 import React, { useState , useContext} from 'react';
 import {ParkingLotContext} from './ParkingLotContext';
-import {fetchParkingLots, parkCar} from './api';
+import {fetchParkingLots, parkCar, fetchCar } from './api';
 import { Input, Select, Button, Space, message } from 'antd';
 
 const { Option } = Select;
 
-const ParkingLotWorker = () => {
+const ParkingLotWorker = ({ refreshParkingLots }) => {
     const [plateNumber, setPlateNumber] = useState('');
     const [parkingStrategy, setParkingStrategy] = useState('');
     const {dispatch} = useContext(ParkingLotContext);
@@ -21,17 +21,28 @@ const ParkingLotWorker = () => {
             dispatch({type: 'PARK_CAR', payload: {plateNumber, position, parkingLot}});
             setPlateNumber('');
             setParkingStrategy('');
+            refreshParkingLots();
         })
             .catch(error => {
                 console.error('Failed to park car:', error);
-            }).finally(() => {
-            fetchParkingLots();
-        });
+            })
     };
 
     const handleFetch = () => {
-        console.log('Fetch button clicked');
-        message.info('Fetch operation executed!');
+        if (!plateNumber) {
+            alert('Plate Number is required.');
+            return;
+        }
+        fetchCar(plateNumber)
+            .then(response => {
+                const { plateNumber } = response.data;
+                dispatch({ type: 'REMOVE_CAR', payload: { plateNumber } });
+                setPlateNumber('');
+                refreshParkingLots();
+            })
+            .catch(error => {
+                console.error('Failed to fetch car:', error);
+            });
     };
 
     return (
